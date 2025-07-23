@@ -1,5 +1,6 @@
 package com.example.routing.person
 
+import com.example.extensions.limited
 import com.example.models.Person
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -34,14 +35,16 @@ fun Application.configurePersonRouting() {
             call.respond(HttpStatusCode.Created, "People added")
         }
 
-        get<GetPeople> { request ->
-            val result = when(request.sort?.lowercase()) {
-                "salary" -> people.sortedByDescending { it.money }
-                "name" -> people.sortedBy { it.name }
-                "age" -> people.sortedBy { it.age }
-                else -> people
+        limited("public") {
+            get<GetPeople> { request ->
+                val result = when (request.sort?.lowercase()) {
+                    "salary" -> people.sortedByDescending { it.money }
+                    "name" -> people.sortedBy { it.name }
+                    "age" -> people.sortedBy { it.age }
+                    else -> people
+                }
+                call.respond(result)
             }
-            call.respond(result)
         }
 
         get<GetPersonById> { request ->

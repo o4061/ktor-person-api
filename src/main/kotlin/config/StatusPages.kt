@@ -17,5 +17,10 @@ fun Application.configureStatusPages() {
         exception<RequestValidationException> { call, cause ->
             call.respond(HttpStatusCode.BadRequest, mapOf("errors" to cause.reasons))
         }
+
+        status(HttpStatusCode.TooManyRequests) { call, status ->
+            val retryAfter = call.response.headers["Retry-After"]
+            call.respond(status, "Too many requests. Retry after $retryAfter seconds.")
+        }
     }
 }
