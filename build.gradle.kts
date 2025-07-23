@@ -28,6 +28,7 @@ dependencies {
     implementation("io.ktor:ktor-server-resources:3.2.1")
     implementation("io.ktor:ktor-server-host-common:3.2.1")
     implementation("io.ktor:ktor-server-status-pages:3.2.1")
+    implementation("io.ktor:ktor-server-request-validation:3.2.1")
     testImplementation("io.ktor:ktor-server-test-host")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }

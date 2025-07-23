@@ -1,21 +1,21 @@
 package com.example.config
 
-import io.ktor.http.HttpStatusCode
+import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.plugins.*
+import io.ktor.server.plugins.requestvalidation.*
 import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.response.respondText
+import io.ktor.server.response.*
+
 
 fun Application.configureStatusPages() {
     install(StatusPages) {
-
-        exception<Throwable> { call, cause ->
-            call.respondText(text = "500: ${cause.message}", status = HttpStatusCode.InternalServerError)
+        exception<BadRequestException> { call, _ ->
+            call.respond(HttpStatusCode.BadRequest, "Invalid JSON format")
         }
 
-        status(HttpStatusCode.Unauthorized) { call, cause ->
-            call.respondText("401: You are not authorized to access this resource", status = HttpStatusCode.Unauthorized)
+        exception<RequestValidationException> { call, cause ->
+            call.respond(HttpStatusCode.BadRequest, mapOf("errors" to cause.reasons))
         }
-
-        statusFile(HttpStatusCode.BadRequest, filePattern = "400.html")
     }
 }

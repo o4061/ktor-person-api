@@ -17,17 +17,7 @@ fun Application.configurePersonRouting() {
 
     routing {
         post("person") {
-            val data = try {
-                call.receive<PersonBody>()
-            } catch (_: ContentTransformationException) {
-                call.respond(HttpStatusCode.BadRequest, "Invalid JSON format")
-                return@post
-            }
-
-            if (data.name.isBlank() || data.age <= 0 || data.money < 0) {
-                call.respond(HttpStatusCode.BadRequest, "Missing or invalid parameters")
-                return@post
-            }
+            val data = call.receive<PersonBody>()
 
             people.add(Person(counter++, data.name, data.age, data.money))
 
@@ -35,18 +25,7 @@ fun Application.configurePersonRouting() {
         }
 
         post("people") {
-            val peopleList = try {
-                call.receive<List<PersonBody>>()
-            } catch (_: ContentTransformationException) {
-                call.respond(HttpStatusCode.BadRequest, "Invalid JSON format")
-                return@post
-            }
-
-            val invalid = peopleList.any { it.name.isBlank() || it.age <= 0 || it.money < 0 }
-            if (invalid) {
-                call.respond(HttpStatusCode.BadRequest, "Some items have invalid fields")
-                return@post
-            }
+            val peopleList = call.receive<List<PersonBody>>()
 
             peopleList.forEach {
                 people.add(Person(counter++, it.name, it.age, it.money))
@@ -80,12 +59,7 @@ fun Application.configurePersonRouting() {
         }
 
         put<UpdatePersonSalary> { request ->
-            val body = try {
-                call.receive<UpdateSalaryBody>()
-            } catch (_: ContentTransformationException) {
-                call.respond(HttpStatusCode.BadRequest, "Invalid JSON format")
-                return@put
-            }
+            val body = call.receive<UpdateSalaryBody>()
 
             val person = people.find { it.id == request.id }
             if (person == null) {
@@ -100,12 +74,7 @@ fun Application.configurePersonRouting() {
         }
 
         patch<UpdatePerson> { request ->
-            val body = try {
-                call.receive<PersonPatchBody>()
-            } catch (_: ContentTransformationException) {
-                call.respond(HttpStatusCode.BadRequest, "Invalid JSON format")
-                return@patch
-            }
+            val body = call.receive<PersonPatchBody>()
 
             val person = people.find { it.id == request.id }
             if (person == null) {
