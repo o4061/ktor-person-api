@@ -30,6 +30,10 @@ dependencies {
     implementation("io.ktor:ktor-server-status-pages:3.2.1")
     implementation("io.ktor:ktor-server-rate-limit:3.2.1")
     implementation("io.ktor:ktor-server-request-validation:3.2.1")
+    implementation("io.ktor:ktor-server-auth:3.2.1")
+    implementation("io.ktor:ktor-client-core:3.2.1")
+    implementation("io.ktor:ktor-client-apache:3.2.1")
+    implementation("io.ktor:ktor-server-auth-jwt:3.2.1")
     testImplementation("io.ktor:ktor-server-test-host")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }

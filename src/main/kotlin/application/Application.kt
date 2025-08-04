@@ -1,7 +1,7 @@
 package com.example.application
 
 import com.example.config.*
-import com.example.routing.person.configurePersonRouting
+import com.example.routing.test.configureTestRouting
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
 
@@ -12,7 +12,9 @@ fun main(args: Array<String>) {
 fun Application.module() {
     configureResources()
     configureRateLimit()
-    configurePersonRouting()
+    configureBearerAuthentication()
+//    configurePersonRouting()
+    configureTestRouting()
     configureSerialization()
     configureStatusPages()
     configureRequestValidation()

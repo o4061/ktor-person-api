@@ -5,6 +5,9 @@ import com.example.models.Hello
 import com.example.models.Product
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
+import io.ktor.server.auth.UserIdPrincipal
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.principal
 import io.ktor.server.request.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
@@ -19,8 +22,11 @@ fun Application.configureTestRouting() {
 
     routing {
 
-        get<Hello> { hello ->
-            call.respondText("Hello, ${hello.name}!")
+        authenticate("bearer-auth") {
+            get<Hello> { hello ->
+                val name = call.principal<UserIdPrincipal>()?.name
+                call.respondText("Hello, ${hello.name} -> $name")
+            }
         }
 
         get<Blogs> { blogs ->
